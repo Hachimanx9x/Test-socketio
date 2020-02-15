@@ -22,9 +22,16 @@ io.on('connection', (socket) =>{
     //cuando ocure las desconexion se imprime
     console.log(`de desconectado`);
   });
+
+  socket.on('chat mensage',(msg)=>{
+    console.log(msg);
+    //mandamos una señal respuesta al recibir una
+    socket.broadcast.emit('chat mensage', msg);
+  });
 });
 
 http.listen(PORT, ()=>{
-  //iniciamos el servidor en el puerot establecido 
+
+  //iniciamos el servidor en el puerot establecido
   console.log(`iniciado en el puerto : ${PORT}`);
 });
