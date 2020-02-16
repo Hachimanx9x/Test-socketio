@@ -21,51 +21,117 @@
  form input {
    border: 0;
    padding: 10px;
-   width: 90%;
-   margin-right: .5%;
+   width: 84%;
+   margin-right: 0.5%;
  }
  form button {
-   width: 9%;
+   width: 15%;
    background: rgb(130, 224, 255);
    border: none;
-   padding: 10px; }
+   padding: 10px;
+  }
+  #sala{
+    background: #798EB8;
+    padding: 3px;
+    position: fixed;
+    font-size:20px;
+    top: 0; width:
+    100%;
+    color: #fff;
+  }
    #mensages {
      list-style-type: none;
-     margin: 0;
+     margin: 40px 0 0 0;
      padding: 0;
    }
    #mensages li{  padding: 5px 10px; }
    #mensages li:nth-child(odd){background: #eee; }
+   #sala-lista{
+     list-style-type: none;
+     margin: 40px 0 0 0;
+     padding: 0;
+   }
+   #sala-lista li{  padding: 5px 10px;  }
+   #sala-lista li:nth-child(odd){background: #eee;}
+   .msgs{display: none;}
+   .salas{display: none;}
 </style>
-
-
-
   </head>
   <body>
-    <ul id="mensages"></ul>
-      <form action="">
-        <input id="m" autocomplete="off" /><button>Enviar</button>
-      </form>
+<div id="sala">Salas</div>
+<form id="nombre-form" class="nombre">
+  <input id="m1" autocomplete="off"/><button>nombre de usuario</button>
+</form>
+<ul id="sala-lista" class="salas"></ul>
+    <form class="salas" id="sala-form">
+      <input id="m2" autocomplete="off"/><button>crear o entra sala</button>
+    </form>
+      <!--ento es para ver los mensages-->
+      <div>
+        <ul id="mensages" class="msgs"></ul>
+          <form class="msgs" id ="msg-form" action="">
+            <input id="m3" autocomplete="off" /><button>Enviar</button>
+          </form>
+      </div>
+
+
+
+
       <!--codigo de aqui para abajo-->
       <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
       <script >
-     $(()=>{
-       const socket =io();
-       $('form').submit((e)=>{
-         e.preventDefault();//evita que se recargue la pagina cuando se oprime enter
-         //se emite la señal con el evento de cambio
-         socket.emit('chat mensage',$('#m').val());
-         //esto es al fuera del tutorial y simplement que es lo que envio en pantalla
-         $('#mensages').append($('<li>').text("envias => " + $('#m').val()));
-         $('#m').val('');
-         return false;
-       });
-       socket.on('chat mensage',function (msg){
-         //al recibir en evento se crea un <li>"texto"</li>
-         $('#mensages').append($('<li>').text("recibo => "+msg));
-       })
-     });
+  $(()=>{
+    const socket = io();
+    let sala, nombre;
+    $('#nombre-form').submit(()=>{
+      nombre=$('#m1').val();
+      socket.emit('set nombre', nombre);
+      $(".nombre").hide();
+      $(".salas").show();
+      $("#sala").text(`Salas - (${nombre})`);
+      return false;
+    });
+    $('#sala-form').submit(()=>{
+      sala=$('#m2').val();
+      socket.emit('nueva sala', sala);
+      $('#m2').val('');
+      $('.salas').hide();
+      $('.msgs').show();
+      $('#sala').text(sala);
+      return false;
+    });
+    $('#msg-form').submit(()=>{
+      socket.emit('chat mensage',{nombre,sala,msg:$('#m3').val()});
+      $('#m3').val('');
+      return false;
+    });
+    socket.on('chat mensage',(msg)=>{
+      $('#mensages').append($('<li>').text(msg));
+    });
+    socket.on('chat mensage',(salas)=>{
+      try{
+        $('#sala-lista').html('');
+        if(salas !== undefined && object.getOwnPropertyNames(salas).length >0){
+        for(let sala in salas){
+          const socket = salas[sala];
+          let txt =`${sala}`+sockets.join(', ');
+          let li =$('#sala-lista').append($('<li>').append($(`<a name="${sala}">`).text(txt)));
+          }
+        }
+        $('#sala-lista a').click(()=>{
+          console.log(`Sala ${this.nombre} cliclado`);
+          socket.emit('entra sala', this.nombre);
+          sala = this.nombre;
+          $('.salas').hide();
+          $('.msgs').show();
+          $('#sala').text(sala);
+        });
+      }catch(e){
+          console.log("Se produjo un error obteniendo la lista de salas");
+      }
+    });
+  });
       </script>
   </body>
 </html>
