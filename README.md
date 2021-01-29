@@ -3,28 +3,45 @@ Pruebas del uso del socket
 
 Esto solamente seran pruebas para el uso de socket.io
 
-se ejecuta con el comando npm start
-usa nodemon asi que cuando cambia el codigo el se actualiza solo
+## CHAT
+se ejecuta con el comando:
 
-en cado de ejecutarlo
+```sh
+npm i
 
-se pone el nombre de nombreUsuario
-y luego se pone el nombre de sala
-en caso de que la sala no exista se crea si existe te unes a ella
-luego mandas los mensajes y ya
+ npm start
+ o
+ npm run dev
+ ```
+usa nodemon asi que cuando cambia el codigo el se actualiza
 
-para el uso de git se usa
+>instrucciónes
 
-git status
+1. se pone el nombre de nombreUsuario
+2. se pone el nombre de sala (en caso de que la sala no exista se crea si existe te unes a ella)
+3. luego mandas los mensajes y ya
 
-git add .
+## CHAT DE VOZ
+se ejecuta por separado dado que es un ejemplo de integracion de socket.io-client en react js
 
-git add <<nombre del archivo>>
+se ejecuta en la carpeta server
+```sh
+npm i
 
-#nos dice las diferencia de versiones
+ npm start
+ o
+ npm run dev
+ ```
+esto iniciara el servidor
 
-git diff
+se ejecuta en la carpeta cliente
+```sh
+yarn
 
-git commint -m "mensaje para decir que emos echo"
+yarn start
+ ```
 
-git push
+ >instrucciónes
+
+1. entras en la dirreción donde abrio react js (generalmente es http://localhost:3000/)
+2. clic en el boton mute para activar el audio y que las demas personas te escuchen
